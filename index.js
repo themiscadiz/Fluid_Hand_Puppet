@@ -190,14 +190,14 @@ function onFrame(event) {
     mouthMotion = globals.q;
 
     if (blinkMotion) {
-        console.log("eyes close");
+        // console.log("eyes close");
         eyes.strokeColor = 'black';
         eyesOpen.fillColor = hue;
         eyesGlow.fillColor = hue;
     }
     else if (blinkMotion === false) {
 
-        console.log("eyes open");
+        // console.log("eyes open");
         eyesOpen.fillColor = 'black';
         eyes.strokeColor = 'black';
         eyesGlow.fillColor = hue;
@@ -208,12 +208,12 @@ function onFrame(event) {
     // mouthMotion
 
     if (mouthMotion) {
-        console.log("mouth open");
+        // console.log("mouth open");
         mouth.strokeWidth = 20;
 
     }
     else if (mouthMotion === false) {
-        console.log("mouth close");
+        // console.log("mouth close");
         mouth.strokeWidth = 7;
 
 
