@@ -229,13 +229,16 @@ function onFrame(event) {
     //     fillColor: 'blue'
     // });
 
-    face.position = [globals.e, globals.f];
+    // face.position = [globals.e, globals.f];
+    face.position = [globals.k, globals.l];
 
-    eyes.position = [globals.e, globals.f + 5];
+    // eyes.position = [globals.e, globals.f + 5];
+    eyes.position = [globals.k, globals.l + 5];
 
     // eyesGlow.position = [globals.e, globals.f - 10];
 
-    mouth.position = [globals.e, globals.f + 30];
+    // mouth.position = [globals.e, globals.f + 30];
+    mouth.position = [globals.k, globals.l + 30];
 
     // eyesOpen.position = [globals.n, globals.o];
 
@@ -246,10 +249,14 @@ function onFrame(event) {
     // }
 
     eyesMovementMap = mapRange(globals.n, 100, 1100, face.position.x + 20, face.position.x - 20);
-    eyesOpen.position = [eyesMovementMap, globals.f];
-    eyesGlow.position = [eyesMovementMap, globals.f - 10];
-    // eyes.position = [eyesMovementMap, globals.f];
+    // eyesOpen.position = [eyesMovementMap, globals.f];
+    // eyesGlow.position = [eyesMovementMap, globals.f - 10];
 
+    eyesOpen.position = [eyesMovementMap, globals.l];
+    eyesGlow.position = [eyesMovementMap, globals.l - 10];
+
+
+    // eyes.position = [eyesMovementMap, globals.f];
     // eyesOpen.position = [globals.e, globals.f];
 
 

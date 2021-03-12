@@ -2,10 +2,10 @@
 
 // ********************
 // VARIABLES FOR PAPER
-window.globals = { a:800, b:100, c:500, d:100, e:800, f:100, g:500, h:100, i:800, j:100, k:100, l:100, m:100, n: 100, o:100, p:false, q:false};
+window.globals = { a: 800, b: 100, c: 500, d: 100, e: 800, f: 100, g: 500, h: 100, i: 800, j: 100, k: 100, l: 100, m: 100, n: 100, o: 100, p: false, q: false };
 
 
-
+// ****Hand Pose****
 let handpose;
 let video;
 let predictions = [];
@@ -14,7 +14,7 @@ let predictions = [];
 // let gravity = 9.0;
 // let mass = 2.0;
 // let newIndicator;
-let smoothMov = 0.3;
+let smoothMov = 0.1;
 // let smoothMov = 0.5;
 
 
@@ -64,8 +64,11 @@ const detection_options = {
   withDescriptors: false,
 }
 
-// ****SET UP****
+// ****Eyes****
+let eye1, eye2;
+let ts = 25;
 
+// ****SET UP****
 function setup() {
   createCanvas(windowWidth, windowHeight);
   floorH = windowHeight;
@@ -84,76 +87,78 @@ function setup() {
   video.hide();
 
   // HAND
-  
-    for (let i = 0; i < lerpLength; i++) {
+  for (let i = 0; i < lerpLength; i++) {
     let thispoint = createVector(0, 0);
     lerpPoints.push(thispoint);
   }
 
+  // // FACE
+  // faceapi = ml5.faceApi(video, detection_options, modelReadyFace)
 
-  // FACE
-  faceapi = ml5.faceApi(video, detection_options, modelReadyFace)
-    //  LERP
-    for (let i = 0; i < pointsLength; i++) {
-      let thispoint = createVector(0, 0);
-      lerpPos.push(thispoint);
-    }
+  // EYES
+  eye1 = new Eye(100, 100, 120);
+  // eye2 = new Eye(300, 100, 120);
+
+  //  LERP
+  for (let i = 0; i < pointsLength; i++) {
+    let thispoint = createVector(0, 0);
+    lerpPos.push(thispoint);
+  }
 }
 
 function modelReady() {
-  console.log("Model ready!");
+  console.log("Hand Model Ready!");
+
+  // FACE
+  faceapi = ml5.faceApi(video, detection_options, modelReadyFace)
 }
 
 function modelReadyFace() {
-  console.log('ready!')
+  console.log('Face Model Ready!')
   console.log(faceapi)
   faceapi.detect(gotResults)
 }
 
 function draw() {
-  
   drawKeypoints();
-
 }
 
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints() {
 
- 
-
   for (let i = 0; i < predictions.length; i += 1) {
     const prediction = predictions[i];
     for (let j = 0; j < prediction.landmarks.length; j += 1) {
-      
-      if (predictions.length != 0){
-         keypoint = prediction.landmarks[j];
-      }
-      if(predictions.length < 0){
-         keypoint = previousKeypoint;
-      }
-     
-      
-        fill(0, 255, 0);
-        noStroke();
 
-        //       //  LERP
-        lerp_X = lerp(lerpPoints[j].x, prediction.landmarks[j][0], smoothMov);
-        lerp_Y = lerp(lerpPoints[j].y, prediction.landmarks[j][1], smoothMov);
-      
+      if (predictions.length != 0) {
+        keypoint = prediction.landmarks[j];
+      }
+      if (predictions.length < 0) {
+        keypoint = previousKeypoint;
+      }
+
+
+      fill(0, 255, 0);
+      noStroke();
+
+      //       //  LERP
+      lerp_X = lerp(lerpPoints[j].x, prediction.landmarks[j][0], smoothMov);
+      lerp_Y = lerp(lerpPoints[j].y, prediction.landmarks[j][1], smoothMov);
+
 
       let keypointPos = createVector(lerp_X, lerp_Y);
-      
+
       lerpPoints[j] = keypointPos;
-      
+
       // // All Point after Lerp
-     previousKeypoint = prediction.landmarks[j];
+      previousKeypoint = prediction.landmarks[j];
 
     }
 
-    
 
-    
-    
+
+
+
     thumpFinger = createVector(lerpPoints[4].x, lerpPoints[4].y);
 
     indexFinger = createVector(lerpPoints[8].x, lerpPoints[8].y);
@@ -164,38 +169,38 @@ function drawKeypoints() {
 
     pinkyFinger = createVector(lerpPoints[20].x, lerpPoints[20].y);
 
-    palm = createVector(lerpPoints[0].x, lerpPoints[0].y);
+    palm = createVector(lerpPoints[9].x, lerpPoints[9].y);
 
 
     let distance = indexFinger.dist(thumpFinger);
 
-    if(distance < 90){
+    if (distance < 90) {
       window.globals.p = true;
     }
-    else{
+    else {
       window.globals.p = false;
     }
 
     // access global variables for paper.js
-      window.globals.c = indexFinger.x;
-      window.globals.d = indexFinger.y;
+    window.globals.c = indexFinger.x;
+    window.globals.d = indexFinger.y;
 
-      window.globals.a = thumpFinger.x;
-      window.globals.b = thumpFinger.y;
+    window.globals.a = thumpFinger.x;
+    window.globals.b = thumpFinger.y;
 
-      window.globals.e = middleFinger.x;
-      window.globals.f = middleFinger.y;
+    window.globals.e = middleFinger.x;
+    window.globals.f = middleFinger.y;
 
-      window.globals.g = ringFinger.x;
-      window.globals.h = ringFinger.y;
+    window.globals.g = ringFinger.x;
+    window.globals.h = ringFinger.y;
 
-      window.globals.i = pinkyFinger.x;
-      window.globals.j = pinkyFinger.y;
+    window.globals.i = pinkyFinger.x;
+    window.globals.j = pinkyFinger.y;
 
-      window.globals.k = palm.x;
-      window.globals.l = palm.y;
+    window.globals.k = palm.x;
+    window.globals.l = palm.y;
 
-      window.globals.m = floorH;
+    window.globals.m = floorH;
   }
 }
 
@@ -244,37 +249,35 @@ function drawCircles(feature) {
 
     let smoothPoints = createVector(x, y);
     lerpPos[i] = smoothPoints;
-
   }
-  
+
   let focalPoint = createVector(lerpPos[27].x, lerpPos[27].y);
-
-
 
   let mouthTop = createVector(lerpPos[51].x, lerpPos[51].y);
   let mouthBottom = createVector(lerpPos[57].x, lerpPos[57].y);
-  
+
   let mouthDist = mouthTop.dist(mouthBottom);
 
-  if(mouthDist > 40){
+  if (mouthDist > 40) {
     window.globals.q = true;
   }
-  else{
+  else {
     window.globals.q = false;
   }
   // ellipse(focalPoint.x, focalPoint.y, 10);
-  
+
   // eyes movement
   fill(255);
+
   let sides = {
     l_x: 100,
     l_y: 0,
     r_x: 175,
     r_y: 50
   }
-  
+
   // rect(sides.l_x, sides.l_y, sides.r_x, sides.r_y);
-  
+
   // let xMap = map(focalPoint.x, 0, width, sides.r_x*1.5,  sides.l_x);
 
   // fill(0);
@@ -283,6 +286,37 @@ function drawCircles(feature) {
 
   window.globals.n = focalPoint.x;
   window.globals.o = focalPoint.y;
-  
+
+  eye1.update(window.globals.n, window.globals.o);
+  eye1.display();
+  // eye2.update(window.globals.n, window.globals.o);
+  // eye2.display();
 }
+
+function Eye(trackingx, trackingy, ts) {
+  this.x = trackingx;
+  this.y = trackingy;
+  this.size = ts;
+  this.angle = 0;
+
+  this.update = function(tracking_x, tracking_y) {
+  this.angle = atan2(tracking_y - this.y, tracking_x - this.x);
+  };
+
+  this.display = function() {
+    push();
+    translate(this.x, this.y);
+    fill(255);
+    
+    ellipse(0, 0, this.size, this.size);
+    
+    rotate(this.angle);
+    fill(153, 204, 0);
+    
+    ellipse(this.size / 4, 0, this.size / 2, this.size / 2);
+    pop();
+  };
+}
+
+
 
