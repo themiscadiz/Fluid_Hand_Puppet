@@ -115,6 +115,10 @@ function modelReady() {
 
 function modelReadyFace() {
   console.log('Face Model Ready!')
+
+  let showValue = document.getElementById("show-value");
+  showValue.innerHTML = `<h2>Puppet is Ready!</h2>`;
+  
   console.log(faceapi)
   faceapi.detect(gotResults)
 }
